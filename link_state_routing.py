@@ -1,4 +1,5 @@
 from collections import deque, namedtuple
+from utilities import *
 
 # Se usara infinito como distancia default entre nodos.
 inf = float('inf')
@@ -23,30 +24,6 @@ class Graph:
             )
         )
 
-    def get_node_pairs(self, n1, n2, both_ends=True):
-        if both_ends:
-            node_pairs = [[n1, n2], [n2, n1]]
-        else:
-            node_pairs = [[n1, n2]]
-        return node_pairs
-
-    def remove_edge(self, n1, n2, both_ends=True):
-        node_pairs = self.get_node_pairs(n1, n2, both_ends)
-        edges = self.edges[:]
-        for edge in edges:
-            if [edge.start, edge.end] in node_pairs:
-                self.edges.remove(edge)
-
-    def add_edge(self, n1, n2, cost=1, both_ends=True):
-        node_pairs = self.get_node_pairs(n1, n2, both_ends)
-        for edge in self.edges:
-            if [edge.start, edge.end] in node_pairs:
-                return ValueError('Edge {} {} already exists'.format(n1, n2))
-
-        self.edges.append(Edge(start=n1, end=n2, cost=cost))
-        if both_ends:
-            self.edges.append(Edge(start=n2, end=n1, cost=cost))
-
     @property
     def neighbours(self):
         neighbours = {vertex: set() for vertex in self.vertices}
@@ -56,7 +33,7 @@ class Graph:
         return neighbours
 
     def dijkstra(self, source, dest):
-        assert source in self.vertices, 'Such source node doesn\'t exist'
+        assert source in self.vertices, 'Nodo no existe en grafo'
         distances = {vertex: inf for vertex in self.vertices}
 
         previous_vertices = {
@@ -66,8 +43,8 @@ class Graph:
         vertices = self.vertices.copy()
 
         while vertices:
-            current_vertex = min(
-                vertices, key=lambda vertex: distances[vertex])
+            current_vertex = min(vertices, key=lambda vertex: distances[vertex])
+
             vertices.remove(current_vertex)
             if distances[current_vertex] == inf:
                 break
@@ -85,12 +62,9 @@ class Graph:
             path.appendleft(current_vertex)
         return path
 
+nodos = get_weights('weights.csv')
+print(nodos)
+graph = Graph(nodos)
 
-graph = Graph([
-    ("a", "b", 7),  ("a", "c", 9),  ("a", "f", 14), ("b", "c", 10),
-    ("b", "d", 15), ("c", "d", 11), ("c", "f", 2),  ("d", "e", 6),
-    ("e", "f", 9)])
-
-path = graph.dijkstra("a", "f")
+path = graph.dijkstra("E", "A")
 print(path)
-    
