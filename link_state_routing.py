@@ -63,7 +63,12 @@ class Graph:
         return path
 
 nodos = get_weights('weights.csv')
-print(nodos)
+# print(nodos)
+
+# print(get_nodes(nodos))
+
+print(get_neighbors('F', nodos))
+
 graph = Graph(nodos)
 
 path = graph.dijkstra("E", "A")
