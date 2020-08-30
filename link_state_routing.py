@@ -62,14 +62,18 @@ class Graph:
             path.appendleft(current_vertex)
         return path
 
-nodos = get_weights('weights.csv')
-# print(nodos)
+# nodos = get_weights('weights.csv')
+# # print(nodos)
 
-# print(get_nodes(nodos))
+# # print(get_nodes(nodos))
 
-print(get_neighbors('F', nodos))
+# # print(get_neighbors('F', nodos))
 
-graph = Graph(nodos)
+# graph = Graph(nodos)
 
-path = graph.dijkstra("E", "A")
-print(path)
+# path = graph.dijkstra("A", "B")
+# print(path)
+
+# j = { 'path': path, 'current_destination': path[path.index('A') + 1] }
+# print(j)
+# print(list(path))

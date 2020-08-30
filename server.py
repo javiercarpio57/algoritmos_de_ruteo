@@ -4,10 +4,13 @@ from utilities import *
 import threading
 import time
 
-
 global nodos
 global usuarios
+global algoritmo
+global todos_nodos
+
 nodos = int(input("Ingrese el numero de nodos: "))
+algoritmo = input('Ingrese el numero del algoritmo que quiere usar:\n1. Flooding\n2. Distance vector routing\n3. Link state routing\n')
 usuarios = 0
 
 connected_nodes = {}
@@ -33,17 +36,28 @@ def message(sid, data):
 @sio.event
 def signin(sid, data):
     global nodos
+    global algoritmo
+    global todos_nodos
+
     print('signin', data)
     connected_nodes[data['name']] = sid
 
     print(connected_nodes)
-
     if(nodos-usuarios == 0):
         pesos = get_weights("weights.csv")
-        nodos = get_nodes(pesos)
+        todos_nodos = get_nodes(pesos)
 
-        for nodo in nodos:
-            sio.emit('play', { 'nodes': [nodo]}, to=connected_nodes[nodo])
+        try:
+            for nodo in todos_nodos:
+                if str(algoritmo) == '3':
+                    print('ALGORITMO:', algoritmo, type(algoritmo))
+                    sio.emit('play', { 'nodes': pesos, 'algoritmo': algoritmo }, to=connected_nodes[nodo])
+        except:
+            print('Error pero no te preocupes')
+
+@sio.event
+def enviar(sid, data):
+    sio.emit('my_message', { 'path': data['path'] }, to=connected_nodes[data['current_destination']])
 
 @sio.event
 def disconnect(sid):
