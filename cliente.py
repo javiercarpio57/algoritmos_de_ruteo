@@ -20,7 +20,7 @@ def my_message(data):
     else:
         print('Pasaron por mi, SALI EN LA PORTADAAAAA')
         print('El siguiente nodo es: ' + str(data['path'][(data['path'].index(my_node) + 1)]))
-    # sio.emit('message', data)
+        sio.emit('enviar', { 'path': data['path'] , 'mensaje': data['mensaje'], 'current_destination': data['path'][(data['path'].index(my_node) + 1)] })
 
 @sio.event
 def play(data):
