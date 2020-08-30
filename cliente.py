@@ -15,7 +15,11 @@ def connect():
 
 @sio.event
 def my_message(data):
-    print('Mensaje recibido ', data)
+    if (data['path'][-1] == my_node):
+        print('Mensaje recibido: ', data['mensaje'])
+    else:
+        print('Pasaron por mi, SALI EN LA PORTADAAAAA')
+        print('El siguiente nodo es: ' + str(data['path'][(data['path'].index(my_node) + 1)]))
     # sio.emit('message', data)
 
 @sio.event
@@ -30,11 +34,11 @@ def play(data):
         menu = '========================\n0. Salir\n1. Enviar un mensaje\n'
         while opcion != '0':
             opcion = input(menu)
-
             if opcion == '1':
                 destino = input('Ingrese el destino ' + str(vecinos) + ' : ')
-                path = graph.dijkstra(my_node, destino)
-                sio.emit('enviar', { 'path': list(path), 'current_destination': path[path.index(my_node) + 1] })
+                mensaje = input('Ingrese el mensaje que desea enviar: \n')
+                path = graph.dijkstra(my_node, destino)                
+                sio.emit('enviar', { 'path': list(path) , 'mensaje': mensaje, 'current_destination': path[path.index(my_node) + 1] })
 
 
 @sio.event

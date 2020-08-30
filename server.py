@@ -57,7 +57,7 @@ def signin(sid, data):
 
 @sio.event
 def enviar(sid, data):
-    sio.emit('my_message', { 'path': data['path'] }, to=connected_nodes[data['current_destination']])
+    sio.emit('my_message', { 'path': data['path'], 'mensaje': data['mensaje'] }, to=connected_nodes[data['current_destination']])
 
 @sio.event
 def disconnect(sid):
