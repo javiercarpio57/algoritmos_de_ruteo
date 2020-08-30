@@ -54,26 +54,12 @@ class Graph:
                     distances[neighbour] = alternative_route
                     previous_vertices[neighbour] = current_vertex
 
+        print('DISTANCES:', distances)
+
         path, current_vertex = deque(), dest
         while previous_vertices[current_vertex] is not None:
             path.appendleft(current_vertex)
             current_vertex = previous_vertices[current_vertex]
         if path:
             path.appendleft(current_vertex)
-        return path
-
-# nodos = get_weights('weights.csv')
-# # print(nodos)
-
-# # print(get_nodes(nodos))
-
-# # print(get_neighbors('F', nodos))
-
-# graph = Graph(nodos)
-
-# path = graph.dijkstra("A", "B")
-# print(path)
-
-# j = { 'path': path, 'current_destination': path[path.index('A') + 1] }
-# print(j)
-# print(list(path))
+        return path, distances[dest]

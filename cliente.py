@@ -91,16 +91,35 @@ def play(data):
                 destino = input('Ingrese el destino ' + str(todos_nodos) + '\nTus vecinos: ' + str(vecinos) + '\n')
                 
                 mensaje = input('Ingrese el mensaje que desea enviar: \n')
-                path = graph.dijkstra(my_node, destino)
+                path, costo = graph.dijkstra(my_node, destino)
+
+                escribir(my_node, destino, len(list(path)), costo, path, mensaje)
+
                 print('PATH:', path)
                 sio.emit('enviar', { 'path': list(path) , 'mensaje': mensaje, 'current_destination': path[path.index(my_node) + 1] })
+            elif opcion == '0':
+                file.close()
+                
 
+def escribir(fuente, destino, saltos, distancia, listado_nodos, mensaje):
+    file = open('log_' + my_node + '.txt', "a")
+    file.write('===============================================\n')
+    file.write('NODO FUENTE: ' + fuente + '\n')
+    file.write('NODO DESTINO: ' + destino + '\n')
+    file.write('SALTOS RECORRIDOS: ' + str(saltos) + '\n')
+    file.write('DISTANCIA: ' + str(distancia) + '\n')
+    file.write('LISTADO DE NODOS USADOS: ' + ' --> '.join(listado_nodos) + '\n')
+    file.write('MENSAJE: ' + mensaje + '\n')
+    file.close()
+    
 
 @sio.event
 def disconnect():
     print('disconnected from server')
 
 my_node = input('Ingresa tu nodo: ')
+
+
 sio.connect('http://localhost:5000')
 
 sio.wait()
