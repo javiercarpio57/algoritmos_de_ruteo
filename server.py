@@ -49,7 +49,10 @@ def signin(sid, data):
 
         try:
             for nodo in connected_nodes.keys():
-                if str(algoritmo) == '3':
+                if str(algoritmo) == '1':
+                    print('ALGORITMO:', nodo)
+                    sio.emit('play', { 'nodes': pesos, 'algoritmo': algoritmo }, to=connected_nodes[nodo])
+                elif str(algoritmo) == '3':
                     print('ALGORITMO:', nodo)
                     sio.emit('play', { 'nodes': pesos, 'algoritmo': algoritmo }, to=connected_nodes[nodo])
         except:
@@ -62,6 +65,10 @@ def enviar(sid, data):
 @sio.event
 def disconnect(sid):
     print('disconnect ', sid)
+
+@sio.event
+def flooding(sid,data):
+    sio.emit('flooding_cliente',{'destination':data['destination'],'mensaje':data['mensaje'], 'hopCount':data['hopCount']}, to=connected_nodes[data['currentNode']])
 
 if __name__ == '__main__':
 
