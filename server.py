@@ -48,9 +48,9 @@ def signin(sid, data):
         todos_nodos = get_nodes(pesos)
 
         try:
-            for nodo in todos_nodos:
+            for nodo in connected_nodes.keys():
                 if str(algoritmo) == '3':
-                    print('ALGORITMO:', algoritmo, type(algoritmo))
+                    print('ALGORITMO:', nodo)
                     sio.emit('play', { 'nodes': pesos, 'algoritmo': algoritmo }, to=connected_nodes[nodo])
         except:
             print('Error pero no te preocupes')
