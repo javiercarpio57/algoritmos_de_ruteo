@@ -40,28 +40,31 @@ def flooding_cliente(data):
     global flood
     try:
         flood
-        print('llego A')
     except NameError:
         flood = Flooding()
+
     hopCount = data['hopCount'] - 1
     destino = data['destination']
     mensaje = data['mensaje']
+    sender = data['sender']
     if flood.nodeState: #Si el estado es verdadero acepta el mensaje, sino ya lo emitio
         if my_node != destino: #Si no es el nodo destino
-            print('He sido utilizado')
+            print(bcolors.WARNING + ' -- Pasaron por mi -- ' + bcolors.ENDC)
             flood.zombieBite() # Ya tengo el estado para ya no recibir nada
             if hopCount > 0: #Si aun tengo saltos y no soy el destino, debo volver a enviar el mensaje
                 for element in vecinos:
-                    sio.emit('flooding',{'destination':destino, 'mensaje': mensaje, 'currentNode':element, 'hopCount':hopCount})
+                    print(bcolors.OKBLUE + '\tReenviando a: ' + element + bcolors.ENDC)
+                    sio.emit('flooding',{'destination':destino, 'mensaje': mensaje, 'sender':sender,'currentNode':element, 'hopCount':hopCount})
         else:
             flood.zombieBite()
-            print(mensaje)
+            print(bcolors.OKBLUE + '\t-> ' + sender + ': ' + mensaje + bcolors.ENDC)
 
 
 @sio.event
 def play(data):
     print('play', data)
-    global vecinos 
+    global vecinos
+    global flood
     vecinos = get_neighbors(my_node, data['nodes'])
     if data['algoritmo'] == '1':
         graph = Graph(data['nodes'])
@@ -76,7 +79,7 @@ def play(data):
                 flood = Flooding()
                 flood.zombieBite()
                 for element in vecinos:
-                        sio.emit('flooding',{'destination':destino, 'mensaje': mensaje, 'currentNode':element, 'hopCount':hopCount})
+                        sio.emit('flooding',{'destination':destino, 'mensaje': mensaje,'sender':my_node, 'currentNode':element, 'hopCount':hopCount})
                 
 
 

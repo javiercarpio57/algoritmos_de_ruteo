@@ -68,7 +68,8 @@ def disconnect(sid):
 
 @sio.event
 def flooding(sid,data):
-    sio.emit('flooding_cliente',{'destination':data['destination'],'mensaje':data['mensaje'], 'hopCount':data['hopCount']}, to=connected_nodes[data['currentNode']])
+    print("Enviando a "+data['currentNode'])
+    sio.emit('flooding_cliente',{'destination':data['destination'],'mensaje':data['mensaje'], 'sender':data['sender'],'hopCount':data['hopCount']}, to=connected_nodes[data['currentNode']])
 
 if __name__ == '__main__':
 
