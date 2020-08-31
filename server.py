@@ -9,6 +9,7 @@ global usuarios
 global algoritmo
 global todos_nodos
 
+puerto = int(input("Ingrese puerto para escuchar en el servidor"))
 nodos = int(input("Ingrese el numero de nodos: "))
 algoritmo = input('Ingrese el numero del algoritmo que quiere usar:\n1. Flooding\n2. Distance vector routing\n3. Link state routing\n')
 usuarios = 0
@@ -73,7 +74,7 @@ def flooding(sid,data):
 
 if __name__ == '__main__':
 
-    eventlet.wsgi.server(eventlet.listen(('', 5000)), app)
+    eventlet.wsgi.server(eventlet.listen(('', puerto)), app)
     
 
 

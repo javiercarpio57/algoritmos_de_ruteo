@@ -122,9 +122,10 @@ def escribir(fuente, destino, saltos, distancia, listado_nodos, mensaje):
 def disconnect():
     print('disconnected from server')
 
-my_node = input('Ingresa tu nodo: ')
+url = input('Ingresa la url del servidor: ')
+my_node = input('Ingresa el nombre del nodo: ')
 
-
-sio.connect('http://localhost:5000')
+#http://localhost:5000
+sio.connect(url)
 
 sio.wait()
