@@ -146,7 +146,11 @@ def final(data):
     while opcion != '0':
         opcion = input(menu)
         if opcion == '1':
-            destino = input('Ingrese el destino ' + str(totalN) + ' : ')
+            error = True
+            while error:
+                destino = input('Ingrese el destino ' + str(totalN) + ' : ')
+                if destino in totalN:
+                    error = False
             mensaje = input('Ingrese el mensaje que desea enviar: \n')
             resulta = get_path(destino, miMatrix)
 
@@ -181,7 +185,12 @@ def play(data):
         while opcion != '0':
             opcion = input(menu)
             if opcion == '1':
-                destino = input('Ingrese el destino ' + str(nodosss) + ' : ')
+
+                error = True
+                while error:
+                    destino = input('Ingrese el destino ' + str(nodosss) + ' : ')
+                    if destino in nodosss:
+                        error = False
                 mensaje = input('Ingrese el mensaje que desea enviar: \n')
                 flood = Flooding()
                 flood.zombieBite()
@@ -260,7 +269,11 @@ def play(data):
         while opcion != '0':
             opcion = input(menu)
             if opcion == '1':
-                destino = input('Ingrese el destino ' + str(todos_nodos) + ':')
+                error = True
+                while error:
+                    destino = input('Ingrese el destino ' + str(todos_nodos) + ':')
+                    if destino in todos_nodos:
+                        error = False
                 
                 mensaje = input('Ingrese el mensaje que desea enviar: \n')
                 path, costo = graph.dijkstra(my_node, destino)
