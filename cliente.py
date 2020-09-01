@@ -282,8 +282,6 @@ def play(data):
 
                 print('PATH:', path)
                 sio.emit('enviar', { 'path': list(path) , 'mensaje': mensaje, 'current_destination': path[path.index(my_node) + 1] })
-            elif opcion == '0':
-                file.close()
 
 def escribir_pasaron_por_mi(mensaje):
     file = open('log_' + my_node + '.txt', "a")
