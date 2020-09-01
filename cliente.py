@@ -73,7 +73,7 @@ def play(data):
         hopCount = len(get_nodes(data['nodes']))
         opcion = ''
         menu = '========================\n0. Salir\n1. Enviar un mensaje\n'
-        while opcion != 0:
+        while opcion != '0':
             opcion = input(menu)
             if opcion == '1':
                 destino = input('Ingrese el destino ' + str(vecinos) + ' : ')
