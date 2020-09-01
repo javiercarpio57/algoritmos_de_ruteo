@@ -134,11 +134,7 @@ def get_path(destination, matrixF):
     result = np.where(matrixF[to] == np.amin(matrixF[to]))
     
     letra = totalN[result[0][0]]
-    return letra
-    
-            
-                
-
+    return letra         
 
 @sio.event
 def final(data):
@@ -159,14 +155,14 @@ def final(data):
 def reciboDVR(data):
     global miMatrix
     if (data['destination'] == my_node):
-        print('Mensaje recibido de',data['destination'],":", data['mensaje'])
+        print(bcolors.OKBLUE + '\t-> ' + data['destination'] + ': ' + data['mensaje'] + bcolors.ENDC)
     else:
         resultado = get_path(data['destination'], miMatrix)
-        print('Pasaron por mi, SALI EN LA PORTADAAAAA')
-        print('El siguiente nodo es: ' + resultado)
+        print(bcolors.WARNING + ' -- Pasaron por mi -- ' + bcolors.ENDC)
+        escribir_pasaron_por_mi(' -- Pasaron por mi -- ')
+
+        print(bcolors.OKBLUE + '\tReenviando a: ' + str(resultado) + bcolors.ENDC)
         sio.emit('distanceF', {'destination':data['destination'], 'mensaje':data['mensaje'],'currentNode':resultado  })
-
-
 
 @sio.event
 def play(data):
@@ -187,7 +183,7 @@ def play(data):
                 flood = Flooding()
                 flood.zombieBite()
                 for element in vecinos:
-                        sio.emit('flooding',{'destination':destino, 'mensaje': mensaje,'sender':my_node, 'currentNode':element, 'hopCount':hopCount})
+                    sio.emit('flooding',{'destination':destino, 'mensaje': mensaje,'sender':my_node, 'currentNode':element, 'hopCount':hopCount})
                 
 
 
