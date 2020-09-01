@@ -146,7 +146,7 @@ def final(data):
     while opcion != '0':
         opcion = input(menu)
         if opcion == '1':
-            destino = input('Ingrese el destino ' + str(vecinos) + ' : ')
+            destino = input('Ingrese el destino ' + str(totalN) + ' : ')
             mensaje = input('Ingrese el mensaje que desea enviar: \n')
             resulta = get_path(destino, miMatrix)
 
@@ -174,13 +174,14 @@ def play(data):
     vecinos = get_neighbors(my_node, data['nodes'])
     if data['algoritmo'] == '1':
         graph = Graph(data['nodes'])
-        hopCount = len(get_nodes(data['nodes']))
+        nodosss = get_nodes(data['nodes'])
+        hopCount = len(nodosss)
         opcion = ''
         menu = '========================\n0. Salir\n1. Enviar un mensaje\n'
         while opcion != '0':
             opcion = input(menu)
             if opcion == '1':
-                destino = input('Ingrese el destino ' + str(vecinos) + ' : ')
+                destino = input('Ingrese el destino ' + str(nodosss) + ' : ')
                 mensaje = input('Ingrese el mensaje que desea enviar: \n')
                 flood = Flooding()
                 flood.zombieBite()
@@ -259,7 +260,7 @@ def play(data):
         while opcion != '0':
             opcion = input(menu)
             if opcion == '1':
-                destino = input('Ingrese el destino ' + str(todos_nodos) + '\nTus vecinos: ' + str(vecinos) + '\n')
+                destino = input('Ingrese el destino ' + str(todos_nodos) + ':')
                 
                 mensaje = input('Ingrese el mensaje que desea enviar: \n')
                 path, costo = graph.dijkstra(my_node, destino)
