@@ -130,6 +130,11 @@ def flooding(sid,data):
     print("Enviando a "+data['currentNode'])
     sio.emit('flooding_cliente',{'destination':data['destination'],'mensaje':data['mensaje'], 'sender':data['sender'],'hopCount':data['hopCount']}, to=connected_nodes[data['currentNode']])
 
+@sio.event
+def limpiezaFlooding(sid,data):
+    print('Limpiando nodos')
+    sio.emit('limpiar',{})
+
 if __name__ == '__main__':
 
     eventlet.wsgi.server(eventlet.listen(('', puerto)), app)

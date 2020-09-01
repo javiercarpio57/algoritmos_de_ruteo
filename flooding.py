@@ -16,3 +16,7 @@ class Flooding:
 
     def resendMessage(self,node): #Si hay vecinos debe enviar el mensaje a nodos vecinos
         print('Envia mensaje')
+
+    def clean(self):
+        self.nodeState = True
+        self.arrived = False
