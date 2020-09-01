@@ -1,7 +1,11 @@
+# TE DA EL VALOR MAS CORTO PERO NO SABEMOS COMO PARA
 import socketio
 from flooding import *
 from link_state_routing import *
 from utilities import *
+import numpy as np
+import time
+import math 
 
 class bcolors:
     HEADER = '\033[95m'
@@ -16,8 +20,14 @@ class bcolors:
 global graph
 global flood
 global vecinos
-
+global recibidos
+global totalN
+global miID
+global miMatrix
+#global terminar
 sio = socketio.Client()
+recibidos = 0
+
 
 @sio.event
 def connect():
@@ -63,6 +73,102 @@ def flooding_cliente(data):
 
 
 @sio.event
+def change(data):
+    global recibidos
+    #global terminar
+    recibidos +=1
+    
+    quienManda = data['quienSoy']
+    #print("Los vecinos que te lo mandaron fueron",vecinos)
+    #print("YO SOY", my_node,"Y RECIBO DE",quienManda)
+    matriz = data['matrizinha']
+    matriz = np.array(matriz).reshape(len(totalN), len(totalN))
+    #print("\n----------------------------------------------------------------")
+    #print(matriz)
+    #print("----------------------------------------------------------------\n")
+    
+    for i in range(len(totalN)):
+        for j in range(len(totalN)):
+            f = np.Infinity
+            if(matriz[i][j] != f and matriz[i][j] != 99):
+                if(i != miID and j != miID):
+                    #print(matriz[i][j],"en posicion",i,j)
+                    columna = totalN.index(quienManda)
+                    fila = i
+                    nuevaS = matriz[i][j] + miMatrix[columna][columna] 
+                    #print("LA suma calculada es", nuevaS)
+                    #print("Se debe sustituir por",miMatrix[fila][columna],"? de la posicion",fila,columna)
+                    #print("el menor es", min(nuevaS,miMatrix[fila][columna]))
+                    miMatrix[fila][columna] = min(nuevaS,miMatrix[fila][columna])
+
+    #print("***********************************************************************")
+    #print(miMatrix)
+    #print("***********************************************************************")
+
+
+    #print(terminar,"esto es terminar")
+    #print(len(totalN),"esto es cuantas iteraciones debe hacer")
+
+    if(recibidos == len(vecinos)):
+        
+        #print("ya recibi de todos los vecinos *****************")
+        matrix = np.array(miMatrix).tolist()
+        
+        time.sleep(0.01*totalN.index(my_node))
+        sio.emit('dvr', { 'quienSoy':my_node,'matriz': matrix })
+        recibidos = 0
+            
+        #terminar +=1
+    
+    #print("Esta cantidad de veces se sumo recibidos",recibidos)
+
+
+    #if(terminar >= len(totalN)):
+    #    print("entro aca?")
+
+def get_path(destination, matrixF):
+    global totalN
+    
+    to = totalN.index(destination)
+    
+    result = np.where(matrixF[to] == np.amin(matrixF[to]))
+    
+    letra = totalN[result[0][0]]
+    return letra
+    
+            
+                
+
+
+@sio.event
+def final(data):
+    global miMatrix
+    print("Llegue al final mi matriz final es:")
+    print(miMatrix)  
+    opcion = ''
+    menu = '========================\n0. Salir\n1. Enviar un mensaje\n'
+    while opcion != '0':
+        opcion = input(menu)
+        if opcion == '1':
+            destino = input('Ingrese el destino ' + str(vecinos) + ' : ')
+            mensaje = input('Ingrese el mensaje que desea enviar: \n')
+            resulta = get_path(destino, miMatrix)
+            sio.emit('distanceF', {'destination':destino, 'mensaje':mensaje,'currentNode':resulta  })
+
+@sio.event
+def reciboDVR(data):
+    global miMatrix
+    if (data['destination'] == my_node):
+        print('Mensaje recibido de',data['destination'],":", data['mensaje'])
+    else:
+        resultado = get_path(data['destination'], miMatrix)
+        print('Pasaron por mi, SALI EN LA PORTADAAAAA')
+        print('El siguiente nodo es: ' + resultado)
+        sio.emit('distanceF', {'destination':data['destination'], 'mensaje':data['mensaje'],'currentNode':resultado  })
+
+
+
+@sio.event
 def play(data):
     print('play', data)
     global vecinos
@@ -84,6 +190,63 @@ def play(data):
                         sio.emit('flooding',{'destination':destino, 'mensaje': mensaje,'sender':my_node, 'currentNode':element, 'hopCount':hopCount})
                 
 
+
+    if data['algoritmo'] == '2':
+        # OBTENER GRAFO
+        global totalN
+        global miID
+        global miMatrix
+        #global terminar
+        
+        totalN = data['todos_nodos']
+        grafo = data['nodes']
+        #terminar = 1
+        # OBTENER LOS VECINOS DE MI NODO 
+        vecinos = get_neighbors(my_node, data['nodes'])
+        #print("Mis vecinos")
+        #print(vecinos)
+        # OBTENER TODOS LOS NODOS
+        nodesGG = data['todos_nodos']
+        #print("Todos los nodos del grafo")
+        #print(nodesGG)
+        # OBTENER QUIENES NO SON MIS VECINOS
+        notVecinos = set(nodesGG) - set(vecinos) - set(my_node)
+        #print("Estos no son mis vecinos")
+        #print(notVecinos)
+        # OBTENER EN QUE POSICION ESTA MI NODO
+        matrix = np.zeros((len(nodesGG),len(nodesGG)))
+        for i in range(len(nodesGG)): 
+            for j in range(len(nodesGG)): 
+                matrix[i][j] = 99
+        miID = nodesGG.index(my_node)
+        #print("La posicion de mi nodo", nodesGG.index(my_node))
+        # LLENAR POSICIONES DE NODOS NO VALIDOS CON INFINITOS
+        matrix[nodesGG.index(my_node)] = np.Infinity
+        matrix[:, nodesGG.index(my_node)] = np.Infinity
+        # LLENAR POSICIONES DE NODOS NO ALCANZABLES CON INFINITOS
+        if(len(notVecinos) > 0):
+            for i in notVecinos:
+                matrix[:,nodesGG.index(i)] = np.Infinity
+        # MATRIZ LISTA PARA LA ITERACION 1
+        #print("Matriz con sus bloqueos")
+        #print(matrix)
+
+        #print(grafo)
+        for i in grafo:
+            if(i[0]==my_node):
+                indice = nodesGG.index(i[1])
+                #print("Colocar",i[1],"en la posicion",indice,",",nodesGG.index(i[1]),"el valor",i[2])
+                matrix[indice][indice] = i[2]
+        # MATRIZ LISTA PARA LA ITERACION 1
+        #print("Matriz con sus valor 1")
+        #print(matrix)
+        miMatrix = matrix
+        matrix = np.array(matrix).tolist()
+        
+        #for i in vecinos:
+        time.sleep(0.01*nodesGG.index(my_node))
+        sio.emit('dvr', { 'quienSoy':my_node,'matriz': matrix})
+        
 
     if data['algoritmo'] == '3':
         graph = Graph(data['nodes'])
