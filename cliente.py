@@ -151,20 +151,20 @@ def final(data):
             resulta = get_path(destino, miMatrix)
 
             escribir(my_node, destino, '...', '...', my_node + ' ... ' + destino, mensaje)
-            sio.emit('distanceF', {'destination':destino, 'mensaje':mensaje,'currentNode':resulta  })
+            sio.emit('distanceF', {'destination':destino, 'mensaje':mensaje,'currentNode':resulta, 'origen': my_node })
 
 @sio.event
 def reciboDVR(data):
     global miMatrix
     if (data['destination'] == my_node):
-        print(bcolors.OKBLUE + '\t-> ' + data['destination'] + ': ' + data['mensaje'] + bcolors.ENDC)
+        print(bcolors.OKBLUE + '\t-> ' + data['origen'] + ': ' + data['mensaje'] + bcolors.ENDC)
     else:
         resultado = get_path(data['destination'], miMatrix)
         print(bcolors.WARNING + ' -- Pasaron por mi -- ' + bcolors.ENDC)
         escribir_pasaron_por_mi(' -- Pasaron por mi -- ')
 
         print(bcolors.OKBLUE + '\tReenviando a: ' + str(resultado) + bcolors.ENDC)
-        sio.emit('distanceF', {'destination':data['destination'], 'mensaje':data['mensaje'],'currentNode':resultado  })
+        sio.emit('distanceF', {'destination':data['destination'], 'mensaje':data['mensaje'],'currentNode':resultado, 'origen':data['origen']  })
 
 @sio.event
 def play(data):
