@@ -32,6 +32,7 @@ def my_message(data):
         print(bcolors.OKBLUE + '\t-> ' + data['path'][0] + ': ' + data['mensaje'] + bcolors.ENDC)
     else:
         print(bcolors.WARNING + ' -- Pasaron por mi -- ' + bcolors.ENDC)
+        escribir_pasaron_por_mi(' -- Pasaron por mi -- ')
         print(bcolors.OKBLUE + '\tReenviando a: ' + str(data['path'][(data['path'].index(my_node) + 1)]) + bcolors.ENDC)
         sio.emit('enviar', { 'path': data['path'] , 'mensaje': data['mensaje'], 'current_destination': data['path'][(data['path'].index(my_node) + 1)] })
 
@@ -50,6 +51,7 @@ def flooding_cliente(data):
     if flood.nodeState: #Si el estado es verdadero acepta el mensaje, sino ya lo emitio
         if my_node != destino: #Si no es el nodo destino
             print(bcolors.WARNING + ' -- Pasaron por mi -- ' + bcolors.ENDC)
+            escribir_pasaron_por_mi(' -- Pasaron por mi -- ')
             flood.zombieBite() # Ya tengo el estado para ya no recibir nada
             if hopCount > 0: #Si aun tengo saltos y no soy el destino, debo volver a enviar el mensaje
                 for element in vecinos:
@@ -104,7 +106,11 @@ def play(data):
                 sio.emit('enviar', { 'path': list(path) , 'mensaje': mensaje, 'current_destination': path[path.index(my_node) + 1] })
             elif opcion == '0':
                 file.close()
-                
+
+def escribir_pasaron_por_mi(mensaje):
+    file = open('log_' + my_node + '.txt', "a")
+    file.write(mensaje + '\n')
+    file.close()                
 
 def escribir(fuente, destino, saltos, distancia, listado_nodos, mensaje):
     file = open('log_' + my_node + '.txt', "a")
