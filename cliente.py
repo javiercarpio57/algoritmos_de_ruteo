@@ -149,6 +149,8 @@ def final(data):
             destino = input('Ingrese el destino ' + str(vecinos) + ' : ')
             mensaje = input('Ingrese el mensaje que desea enviar: \n')
             resulta = get_path(destino, miMatrix)
+
+            escribir(my_node, destino, '...', '...', my_node + ' ... ' + destino, mensaje)
             sio.emit('distanceF', {'destination':destino, 'mensaje':mensaje,'currentNode':resulta  })
 
 @sio.event
@@ -182,6 +184,9 @@ def play(data):
                 mensaje = input('Ingrese el mensaje que desea enviar: \n')
                 flood = Flooding()
                 flood.zombieBite()
+
+                escribir(my_node, destino, '...', '...', my_node + ' ... ' + destino, mensaje)
+
                 for element in vecinos:
                     sio.emit('flooding',{'destination':destino, 'mensaje': mensaje,'sender':my_node, 'currentNode':element, 'hopCount':hopCount})
                 
