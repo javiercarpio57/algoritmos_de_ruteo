@@ -156,7 +156,7 @@ def get_path(destination, matrixF):
 @sio.event
 def final(data):
     global miMatrix
-    print("Llegue al final mi matriz final es:")
+    #print("Llegue al final mi matriz final es:")
     #print(miMatrix)  
     opcion = ''
     menu = '========================\n0. Salir\n1. Enviar un mensaje\n'
