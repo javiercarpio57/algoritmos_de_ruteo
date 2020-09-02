@@ -149,13 +149,14 @@ def get_path(destination, matrixF):
     result = np.where(matrixF[to] == np.amin(matrixF[to]))
     
     letra = totalN[result[0][0]]
-    return letra         
+    valor = matrixF[to][result[0][0]]
+    return letra,valor         
 
 @sio.event
 def final(data):
     global miMatrix
     print("Llegue al final mi matriz final es:")
-    print(miMatrix)  
+    #print(miMatrix)  
     opcion = ''
     menu = '========================\n0. Salir\n1. Enviar un mensaje\n'
     while opcion != '0':
@@ -167,9 +168,9 @@ def final(data):
                 if destino in totalN:
                     error = False
             mensaje = input('Ingrese el mensaje que desea enviar: \n')
-            resulta = get_path(destino, miMatrix)
+            resulta, valo = get_path(destino, miMatrix)
 
-            escribir(my_node, destino, '...', '...', my_node + ' ... ' + destino, mensaje)
+            escribir(my_node, destino, '...', valo, my_node + ' ... ' + destino, mensaje)
             sio.emit('distanceF', {'destination':destino, 'mensaje':mensaje,'currentNode':resulta, 'origen': my_node })
 
 @sio.event
@@ -178,7 +179,7 @@ def reciboDVR(data):
     if (data['destination'] == my_node):
         print(bcolors.OKBLUE + '\t-> ' + data['origen'] + ': ' + data['mensaje'] + bcolors.ENDC)
     else:
-        resultado = get_path(data['destination'], miMatrix)
+        resultado,_ = get_path(data['destination'], miMatrix)
         print(bcolors.WARNING + ' -- Pasaron por mi -- ' + bcolors.ENDC)
         escribir_pasaron_por_mi(' -- Pasaron por mi -- ')
 
