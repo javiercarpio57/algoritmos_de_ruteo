@@ -54,8 +54,6 @@ class Graph:
                     distances[neighbour] = alternative_route
                     previous_vertices[neighbour] = current_vertex
 
-        print('DISTANCES:', distances)
-
         path, current_vertex = deque(), dest
         while previous_vertices[current_vertex] is not None:
             path.appendleft(current_vertex)

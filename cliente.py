@@ -187,7 +187,6 @@ def reciboDVR(data):
 
 @sio.event
 def play(data):
-    print('play', data)
     global vecinos
     global flood
     vecinos = get_neighbors(my_node, data['nodes'])
@@ -286,7 +285,7 @@ def play(data):
             if opcion == '1':
                 error = True
                 while error:
-                    destino = input('Ingrese el destino ' + str(todos_nodos) + ':')
+                    destino = input('Ingrese el destino ' + str(todos_nodos) + ': ')
                     if destino in todos_nodos:
                         error = False
                 
@@ -294,11 +293,7 @@ def play(data):
                 path, costo = graph.dijkstra(my_node, destino)
 
                 escribir(my_node, destino, len(list(path)), costo, path, mensaje)
-
-                print('PATH:', path)
                 sio.emit('enviar', { 'path': list(path) , 'mensaje': mensaje, 'current_destination': path[path.index(my_node) + 1] })
-            elif opcion == '0':
-                file.close()
 
 def escribir_pasaron_por_mi(mensaje):
     file = open('log_' + my_node + '.txt', "a")
