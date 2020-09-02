@@ -135,6 +135,11 @@ def limpiezaFlooding(sid,data):
     print('Limpiando nodos')
     sio.emit('limpiar',{})
 
+@sio.event
+def haLlegado(sid,data):
+    print('Ha llegado el mensaje')
+    sio.emit('llegoMensaje',{})
+
 if __name__ == '__main__':
 
     eventlet.wsgi.server(eventlet.listen(('', puerto)), app)

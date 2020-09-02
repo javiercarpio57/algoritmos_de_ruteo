@@ -63,9 +63,9 @@ def flooding_cliente(data):
         if my_node != destino: #Si no es el nodo destino
             print(bcolors.WARNING + ' -- Pasaron por mi -- ' + bcolors.ENDC)
             escribir_pasaron_por_mi(' -- Pasaron por mi -- ')
-            print("Esto es antes de llegar el mensaje",flood.nodeState)
+  #          print("Esto es antes de llegar el mensaje"+str(flood.nodeState))
             flood.zombieBite() # Ya tengo el estado para ya no recibir nada
-            print("Esto es despues de llegar el mensaje",flood.nodeState)
+   #         print("Esto es despues de llegar el mensaje"+str(flood.nodeState))
             if hopCount > 0: #Si aun tengo saltos y no soy el destino, debo volver a enviar el mensaje
                 for element in vecinos:
                     print(bcolors.OKBLUE + '\tReenviando a: ' + element + bcolors.ENDC)
@@ -73,12 +73,19 @@ def flooding_cliente(data):
         else:
             flood.zombieBite()
             print(bcolors.OKBLUE + '\t-> ' + sender + ': ' + mensaje + bcolors.ENDC)
+            #sio.emit('haLlegado',{'mensaje':'llego'})
             sio.emit('limpiezaFlooding',{'mensaje': 'limpiar'})
 
 @sio.event
 def limpiar(data):
     global flood
     flood.clean()
+    print("Soy el nodo"+my_node+"y mi estado es:"+flood.nodeState)
+
+@sio.event
+def llegoMensaje(data):
+    global flood
+    flood.arrivo()
 
 @sio.event
 def change(data):
