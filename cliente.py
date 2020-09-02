@@ -180,7 +180,6 @@ def reciboDVR(data):
 
 @sio.event
 def play(data):
-    print('play', data)
     global vecinos
     global flood
     vecinos = get_neighbors(my_node, data['nodes'])
