@@ -58,7 +58,7 @@ def flooding_cliente(data):
     destino = data['destination']
     mensaje = data['mensaje']
     sender = data['sender']
-    print("Estado antes de comprobar",flood.nodeState)
+    #print("Estado antes de comprobar",flood.nodeState)
     if flood.nodeState: #Si el estado es verdadero acepta el mensaje, sino ya lo emitio
         if my_node != destino: #Si no es el nodo destino
             print(bcolors.WARNING + ' -- Pasaron por mi -- ' + bcolors.ENDC)
@@ -73,6 +73,7 @@ def flooding_cliente(data):
         else:
             flood.zombieBite()
             print(bcolors.OKBLUE + '\t-> ' + sender + ': ' + mensaje + bcolors.ENDC)
+            time.sleep(2)
             #sio.emit('haLlegado',{'mensaje':'llego'})
             sio.emit('limpiezaFlooding',{'mensaje': 'limpiar'})
 
@@ -80,7 +81,7 @@ def flooding_cliente(data):
 def limpiar(data):
     global flood
     flood.clean()
-    print("Soy el nodo"+my_node+"y mi estado es:"+flood.nodeState)
+   # print("Soy el nodo"+my_node+"y mi estado es:"+flood.nodeState)
 
 @sio.event
 def llegoMensaje(data):
