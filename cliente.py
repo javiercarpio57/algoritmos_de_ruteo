@@ -60,7 +60,6 @@ def flooding_cliente(data):
 
 @sio.event
 def play(data):
-    print('play', data)
     global vecinos 
     vecinos = get_neighbors(my_node, data['nodes'])
     if data['algoritmo'] == '1':
