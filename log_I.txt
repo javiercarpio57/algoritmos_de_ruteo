@@ -1,7 +1,0 @@
-===============================================
-NODO FUENTE: I
-NODO DESTINO: D
-SALTOS RECORRIDOS: 2
-DISTANCIA: 6.0
-LISTADO DE NODOS USADOS: I --> D
-MENSAJE: A mimir

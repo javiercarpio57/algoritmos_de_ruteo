@@ -1,7 +1,0 @@
-===============================================
-NODO FUENTE: H
-NODO DESTINO: A
-SALTOS RECORRIDOS: 5
-DISTANCIA: 12.0
-LISTADO DE NODOS USADOS: H --> F --> D --> I --> A
-MENSAJE: Si, eso ya lo sabemos
